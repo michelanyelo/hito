@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "title": "Thriller",
+        "artist": "Michael Jackson",
+        "sales": "70 million"
+    },
+    {
+        "id": 2,
+        "title": "Back in Black",
+        "artist": "AC/DC",
+        "sales": "50 million"
+    },
+    {
+        "id": 3,
+        "title": "The Dark Side of the Moon",
+        "artist": "Pink Floyd",
+        "sales": "45 million"
+    },
+    {
+        "id": 4,
+        "title": "The Bodyguard",
+        "artist": "Whitney Houston",
+        "sales": "44 million"
+    },
+    {
+        "id": 5,
+        "title": "Rumours",
+        "artist": "Fleetwood Mac",
+        "sales": "40 million"
+    }
+]
