@@ -17,7 +17,10 @@ CREATE TABLE albums (
     artist VARCHAR(255) NOT NULL,
     sales VARCHAR(50),
     release_date DATE,
-    genre VARCHAR(100)
+    genre VARCHAR(100),
+    user_id UUID NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
 );
 
 INSERT INTO
