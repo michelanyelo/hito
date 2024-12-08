@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { albumController } from "../controllers/album.controller.js";
-import { verifyToken } from "../middlewares/auth.middleware.js"; // Middleware de autenticación
+import { albumController } from "../controller/album.controller.js";
+import { verifyToken } from "../middlewares/jwt.middleware.js"; // Middleware de autenticación
 
 const router = Router();
 

@@ -1,26 +1,24 @@
-import express from "express"
-import albumRoute from "./routes/album.route.js"
-import userRoute from "./routes/user.route.js"
-import authRoute from "./routes/auth.route.js"
+import express from "express";
+import albumRoute from "./routes/album.route.js";
+import userRoute from "./routes/user.route.js";
+import authRoute from "./routes/auth.route.js";
+import { verifyToken } from "./middlewares/jwt.middleware.js"; // Asegúrate de importar el middleware
 
-const app = express()
-const port = process.env.PORT || 3000
+const app = express();
+const port = process.env.PORT || 3000;
 
 // Habilitar request body
-app.use(express.json())
+app.use(express.json());
 
-// Habilitar rutas publicas/protegidas
+// Rutas protegidas (requieren autenticación)
+// Rutas privadas (requieren token)
+app.use("/api/users", verifyToken, userRoute); // Asegúrate de que /api/users sea una ruta protegida
 
-// Ruta privada (leer todos los usuarios)
-app.use("/api/users", userRoute)
-
-// Ruta pública (leer todos los albums) 
-app.use("/api/albums", albumRoute)
-
-// Ruta pública (loguearse/registrarse)
-app.use("/api/auth", authRoute)
+// Rutas públicas (no requieren token)
+app.use("/api/albums", albumRoute); // Ruta pública para ver álbumes
+app.use("/api/auth", authRoute); // Ruta pública para login/registro
 
 // Levantar Servidor
 app.listen(port, () => {
-    console.log(`Servidor levantado en el puerto ${port}`)
-})
+    console.log(`Servidor levantado en el puerto ${port}`);
+});
