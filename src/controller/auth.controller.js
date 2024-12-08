@@ -1,34 +1,27 @@
+// auth.controller.js
 import { authService } from "../services/auth.service.js";
-import { userService } from "../services/user.service.js";
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
     try {
-        const { email, password } = req.body
-        const token = await authService.loginWithEmailAndPassword(email, password)
-
-        res.json({ token })
+        const { email, password } = req.body;
+        const token = await authService.loginWithEmailAndPassword(email, password);
+        res.status(200).json({ token }); // Status code 200 para éxito
     } catch (error) {
-        console.error(error);
-        if (error instanceof Error) {
-            res.status(500).json({ message: error.message })
-        } else res.status(500).json({ error: "Error de servidor" })
+        next(error);  // Pasar el error al middleware de manejo de errores
     }
-}
+};
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
     try {
-        const { email, password } = req.body
-        const newUser = await userService.createUserWithEmailAndPassword(email, password)
-        res.json({ newUser })
+        const { email, password } = req.body;
+        const newUser = await authService.createUserWithEmailAndPassword(email, password);
+        res.status(201).json({ newUser });  // Status code 201 para creación exitosa
     } catch (error) {
-        console.error(error);
-        if (error instanceof Error) {
-            res.status(500).json({ message: error.message })
-        } else res.status(500).json({ error: "Error de servidor" })
+        next(error);  // Pasar el error al middleware de manejo de errores
     }
-}
+};
 
 export const authController = {
     login,
-    register
-}
+    register,
+};
