@@ -1,38 +1,47 @@
-import { nanoid } from "nanoid";
 import { UserModel } from "../models/user.model.js";
-import bcrypt from "bcryptjs";
+import { HttpError } from "../utils/httpError.util.js";  // Asegúrate de que tienes esta clase HttpError definida
 
 const getAllUsers = async () => {
-    const users = await UserModel.readUsers()
-    return users
+    const users = await UserModel.findAll();
+    return users;
 }
 
-const createUserWithEmailAndPassword = async (email, password) => {
-    const users = await getAllUsers()
-    const userExist = users.find(item => item.email === email)
+const getUserById = async (id) => {
+    const user = await UserModel.findById(id);
 
-    if (userExist) {
-        throw new Error('User already exist')
-    }
+    if (!user) throw new HttpError("User not found", 404); // Usuario no encontrado
 
-    // Hashear Password
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
+    return user;
+}
 
-    // Crear un nuevo usuario
-    const newUser = {
-        id: nanoid(),
-        email,
-        password: hashedPassword
-    }
+const getUserByEmail = async (email) => {
+    const user = await UserModel.findOneByEmail(email);
 
-    // Agregar el nuevo usuario al json
-    users.push(newUser)
-    await UserModel.writeUsers(users)
-    return newUser
+    if (!user) throw new HttpError("User not found", 404); // Usuario no encontrado
+
+    return user;
+}
+
+const deleteUserById = async (id) => {
+    const user = await UserModel.remove(id);
+
+    if (!user) throw new HttpError("User not found", 404); // Usuario no encontrado
+
+    return user;
+}
+
+const updateUserById = async (id, email, password) => {
+    const user = await UserModel.update(id, email, password);
+
+    if (!user) throw new HttpError("User not found", 404); // Usuario no encontrado
+
+    return user;
 }
 
 export const userService = {
     getAllUsers,
-    createUserWithEmailAndPassword
-}
+    getUserById,
+    getUserByEmail,
+    deleteUserById,
+    updateUserById
+};

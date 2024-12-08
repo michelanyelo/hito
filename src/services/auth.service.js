@@ -1,32 +1,50 @@
-import { userService } from "./user.service.js";
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
+import { UserModel } from "../models/user.model.js"
+
+const isValidPassword = async (enteredPassword, storedPasswordHash) => {
+    // Compara la contraseña ingresada con el hash almacenado
+    return bcrypt.compare(enteredPassword, storedPasswordHash)
+}
 
 const loginWithEmailAndPassword = async (email, password) => {
-    const users = await userService.getAllUsers()
-    // Verificar que el usuario exista
-    const user = users.find(item => item.email === email)
+    // Encuentra al usuario por su correo electrónico
+    const user = await UserModel.findOneByEmail(email)
 
     if (!user) {
-        throw new Error('User not found')// Si no existe el usuario, lanzar un error
+        throw new Error("Invalid credentials")
     }
 
-    // Comparar los hash de contraseñas
-    const isValidPassword = await bcrypt.compare(password, user.password)
+    // Valida la contraseña ingresada
+    const isPasswordValid = await isValidPassword(password, user.password)  // user.password es el hash
 
-    if (!isValidPassword) {
-        throw new Error('Invalid password') // Si la contraseña no es válida, lanzar un error
+    if (!isPasswordValid) {
+        throw new Error("Invalid credentials")
     }
 
-    // Generar el json webtoken
-    const token = jwt.sign({ email: user.email }, "secret", {
-        expiresIn: "1h"
-    })
+    // Si la contraseña es válida, genera el token
+    const token = jwt.sign(
+        { email: user.email, id: user.id },  // Incluye el 'uid' en el payload
+        "secret",  // Clave secreta para firmar el token
+        { expiresIn: "1h" }  // Establece una expiración de 1 hora para el token
+    )
 
-    console.log(token)
     return token
 }
 
+const createUserWithEmailAndPassword = async (email, password) => {
+    const user = await UserModel.findOneByEmail(email)
+
+    if (user) throw new HttpError("User already exists", 409)
+
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt)
+    const userCreated = await UserModel.create(email, hashedPassword)
+
+    return userCreated
+}
+
 export const authService = {
-    loginWithEmailAndPassword
+    loginWithEmailAndPassword,
+    createUserWithEmailAndPassword
 }
