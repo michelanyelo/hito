@@ -4,12 +4,18 @@ import { verifyToken } from "../middlewares/jwt.middleware.js";
 
 const router = Router();
 
-// path fijo: http://localhost:3000/api/users
+// path fijo: http://localhost:3000/api/v1/users
 
-// leer todos los usuarios
+// Leer todos los usuarios (ruta protegida)
 router.get('/', verifyToken, userController.getUsers);
 
-// crear un usuario
-router.post("/", verifyToken, userController.createUser)
+// Leer un único usuario por id (ruta protegida)
+router.get('/:id', verifyToken, userController.getUser); // Añadido verifyToken aquí para protección
+
+// Eliminar un usuario por id (ruta protegida)
+router.delete('/:id', verifyToken, userController.deleteUser);
+
+// Actualizar un usuario por id (ruta protegida)
+router.put('/:id', verifyToken, userController.updateUser);
 
 export default router;

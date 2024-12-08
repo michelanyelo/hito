@@ -1,22 +1,26 @@
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
-export const verifyToken = async (req, res, next) => {
-    const authHeader = req.headers.authorization
+export const verifyToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
 
-    if (!authHeader) {
-        res.status(401).json({ message: 'No token provided' })
-        return
+    // Verificar si se proporciona el token
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "No token provided or invalid format" });
     }
 
-    const token = authHeader.split(" ")[1]
+    const token = authHeader.split(" ")[1];
 
     try {
-        const payload = jwt.verify(token, "secret")
+        // Verificar el token
+        const payload = jwt.verify(token, process.env.JWT_SECRET || "secret");
 
-        req.email = payload.email
-        next()
+        // Adjuntar datos del token a la solicitud
+        req.uid = payload.id;
+        req.email = payload.email;
+
+        next(); // Continuar con el siguiente middleware/controlador
     } catch (error) {
-        console.error(error);
-        res.status(403).json({ message: 'Invalid token' })
+        console.error("Error verifying token:", error);
+        return res.status(403).json({ message: "Invalid or expired token" });
     }
-}
+};
