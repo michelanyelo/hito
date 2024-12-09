@@ -12,8 +12,7 @@ const create = async (email, password) => {
     }
 
     const { rows } = await pool.query(query);
-
-    console.log(rows)
+    
     return rows[0];
 }
 

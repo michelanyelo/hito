@@ -54,3 +54,5 @@ VALUES (
     );
 
 SELECT * FROM albums;
+
+SELECT * FROM users;

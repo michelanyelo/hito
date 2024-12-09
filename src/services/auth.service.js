@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import { UserModel } from "../models/user.model.js"
+import { HttpError } from "../utils/httpError.util.js"
 
 const isValidPassword = async (enteredPassword, storedPasswordHash) => {
     // Compara la contraseña ingresada con el hash almacenado
@@ -33,16 +34,30 @@ const loginWithEmailAndPassword = async (email, password) => {
 }
 
 const createUserWithEmailAndPassword = async (email, password) => {
-    const user = await UserModel.findOneByEmail(email)
+    try {
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!emailRegex.test(email)) {
+            throw new HttpError("Invalid email format", 400); // Cambiar a HttpError con código 400
+        }
 
-    if (user) throw new HttpError("User already exists", 409)
+        const user = await UserModel.findOneByEmail(email);
+        if (user) {
+            throw new HttpError("User already exists", 409); // Cambiar a HttpError con código 409
+        }
 
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
-    const userCreated = await UserModel.create(email, hashedPassword)
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-    return userCreated
-}
+        const userCreated = await UserModel.create(email, hashedPassword);
+
+        return {
+            id: userCreated.id,
+            email: userCreated.email,
+        };
+    } catch (error) {
+        throw new HttpError(error.message || "Internal server error", error.statusCode || 500); // Asegúrate de que siempre se lance un HttpError
+    }
+};
 
 export const authService = {
     loginWithEmailAndPassword,
