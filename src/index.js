@@ -2,7 +2,7 @@ import express from "express";
 import albumRoute from "./routes/album.route.js";
 import userRoute from "./routes/user.route.js";
 import authRoute from "./routes/auth.route.js";
-import { verifyToken } from "./middlewares/jwt.middleware.js"; // Asegúrate de importar el middleware
+import { verifyToken } from "./middlewares/jwt.middleware.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,7 +12,7 @@ app.use(express.json());
 
 // Rutas protegidas (requieren autenticación)
 // Rutas privadas (requieren token)
-app.use("/api/users", verifyToken, userRoute); // Asegúrate de que /api/users sea una ruta protegida
+app.use("/api/users", verifyToken, userRoute);
 
 // Rutas públicas (no requieren token)
 app.use("/api/albums", albumRoute); // Ruta pública para ver álbumes
