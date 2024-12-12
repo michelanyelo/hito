@@ -2,7 +2,6 @@
 import { pool } from "../config/database.js";
 
 const create = async (title, artist, sales, releaseDate, genre) => {
-    console.log("Datos que se enviarán:", { title, artist, sales, releaseDate, genre });
 
     const query = {
         text: `
@@ -14,7 +13,6 @@ const create = async (title, artist, sales, releaseDate, genre) => {
     };
 
     const { rows } = await pool.query(query);
-    console.log("Datos devueltos:", rows[0]);
     return rows[0];
 };
 

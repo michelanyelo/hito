@@ -1,31 +1,30 @@
 import { albumService } from "../services/album.service.js";
 import { HttpError } from "../utils/httpError.util.js";
-
+import { parseISO, isValid, format } from "date-fns"
 
 const validateAlbumData = (data) => {
     if (!data.title || !data.artist || !data.genre || !data.release_date) {
         throw new HttpError(400, "Missing required fields");
     }
 
-    // Validar el formato de la fecha utilizando una expresión regular
-    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-    if (!dateRegex.test(data.release_date)) {
+    // Validar el formato de la fecha usando date-fns
+    const date = parseISO(data.release_date);
+    if (!isValid(date)) {
         throw new HttpError(400, "Invalid date format");
     }
 
-    // Convertir la fecha a un objeto Date y verificar su validez
-    const date = new Date(data.release_date);
-    if (isNaN(date.getTime())) {
-        throw new HttpError(400, "Invalid date");
-    }
+    // Convertir la fecha a un formato amigable para la base de datos
+    data.release_date = format(date, 'yyyy-MM-dd');
 };
 
 const formatDate = (isoDate) => {
-    const date = new Date(isoDate);
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Meses van de 0 a 11
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    // Asegurarse de que isoDate sea una cadena de texto
+    const dateStr = isoDate.toString();
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) {
+        throw new Error("Invalid date");
+    }
+    return format(date, 'yyyy-MM-dd');
 };
 
 const createAlbum = async (req, res, next) => {

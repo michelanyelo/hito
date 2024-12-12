@@ -10,3 +10,10 @@
 2024-12-12T01:17:29.574Z [ERROR]: Expected ',' or '}' after property value in JSON at position 119 (line 1 column 120)
 2024-12-12T01:19:42.011Z [ERROR]: column "user_id" of relation "albums" does not exist
 2024-12-12T01:23:41.666Z [ERROR]: moment is not defined
+2024-12-12T01:52:29.051Z [ERROR]: Invalid credentials
+2024-12-12T01:54:13.001Z [ERROR]: Invalid credentials
+2024-12-12T01:54:19.022Z [ERROR]: dateString.split is not a function
+2024-12-12T01:56:35.425Z [ERROR]: dateString.split is not a function
+2024-12-12T02:01:18.576Z [ERROR]: Invalid time value
+2024-12-12T02:01:39.985Z [ERROR]: dateString.split is not a function
+2024-12-12T02:02:58.750Z [ERROR]: Invalid time value
