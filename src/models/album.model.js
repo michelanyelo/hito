@@ -2,6 +2,8 @@
 import { pool } from "../config/database.js";
 
 const create = async (title, artist, sales, releaseDate, genre) => {
+    console.log("Datos que se enviarán:", { title, artist, sales, releaseDate, genre });
+
     const query = {
         text: `
             INSERT INTO albums (title, artist, sales, release_date, genre)
@@ -12,8 +14,10 @@ const create = async (title, artist, sales, releaseDate, genre) => {
     };
 
     const { rows } = await pool.query(query);
+    console.log("Datos devueltos:", rows[0]);
     return rows[0];
 };
+
 
 const findAll = async () => {
     const query = {

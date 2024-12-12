@@ -15,16 +15,27 @@ const getAlbumById = async (id) => {
 };
 
 const createAlbum = async (albumData) => {
-    // Validar datos antes de insertarlos
-    const { title, artist, sales, releaseDate, genre } = albumData;
+    const { title, artist, sales, release_date, genre } = albumData;
 
     if (!title || !artist) {
         throw new Error("Title and artist are required");
     }
 
+    // Validar y formatear la fecha
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(release_date)) {
+        throw new Error("Invalid date format");
+    }
+
+    const date = new Date(release_date);
+    if (isNaN(date.getTime())) {
+        throw new Error("Invalid date");
+    }
+
     // Crear el álbum en la base de datos
-    return await AlbumModel.create(title, artist, sales, releaseDate, genre);
+    return await AlbumModel.create(title, artist, sales, release_date, genre);
 };
+
 
 const updateAlbum = async (id, albumData) => {
     // Validar que el álbum existe

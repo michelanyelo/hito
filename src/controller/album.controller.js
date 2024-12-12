@@ -1,21 +1,31 @@
 import { albumService } from "../services/album.service.js";
 import { HttpError } from "../utils/httpError.util.js";
 
-const validateAlbumData = (data) => {
-    const { title, artist, release_date, genre } = data;
 
-    if (!title || typeof title !== "string") {
-        throw new HttpError(400, "Invalid or missing 'title'");
+const validateAlbumData = (data) => {
+    if (!data.title || !data.artist || !data.genre || !data.release_date) {
+        throw new HttpError(400, "Missing required fields");
     }
-    if (!artist || typeof artist !== "string") {
-        throw new HttpError(400, "Invalid or missing 'artist'");
+
+    // Validar el formato de la fecha utilizando una expresión regular
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(data.release_date)) {
+        throw new HttpError(400, "Invalid date format");
     }
-    if (release_date && isNaN(Date.parse(release_date))) {
-        throw new HttpError(400, "Invalid 'release_date'");
+
+    // Convertir la fecha a un objeto Date y verificar su validez
+    const date = new Date(data.release_date);
+    if (isNaN(date.getTime())) {
+        throw new HttpError(400, "Invalid date");
     }
-    if (genre && typeof genre !== "string") {
-        throw new HttpError(400, "Invalid 'genre'");
-    }
+};
+
+const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Meses van de 0 a 11
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
 };
 
 const createAlbum = async (req, res, next) => {
@@ -29,11 +39,16 @@ const createAlbum = async (req, res, next) => {
 
         const album = await albumService.createAlbum(albumData);
 
+        // Formatear la fecha antes de enviar la respuesta
+        album.release_date = formatDate(album.release_date);
+
         res.status(201).json({ album });
     } catch (error) {
         next(error); // Delegar error al middleware
     }
 };
+
+
 
 const getAllAlbums = async (req, res, next) => {
     try {

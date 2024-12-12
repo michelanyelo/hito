@@ -7,3 +7,6 @@
 2024-12-09T23:47:24.622Z [ERROR]: User already exists
 2024-12-09T23:47:47.856Z [ERROR]: User already exists
 2024-12-09T23:48:28.803Z [ERROR]: User already exists
+2024-12-12T01:17:29.574Z [ERROR]: Expected ',' or '}' after property value in JSON at position 119 (line 1 column 120)
+2024-12-12T01:19:42.011Z [ERROR]: column "user_id" of relation "albums" does not exist
+2024-12-12T01:23:41.666Z [ERROR]: moment is not defined
