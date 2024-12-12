@@ -17,3 +17,5 @@
 2024-12-12T02:01:18.576Z [ERROR]: Invalid time value
 2024-12-12T02:01:39.985Z [ERROR]: dateString.split is not a function
 2024-12-12T02:02:58.750Z [ERROR]: Invalid time value
+2024-12-12T02:15:16.324Z [ERROR]: date is not defined
+2024-12-12T02:15:42.081Z [ERROR]: dateStr is not defined

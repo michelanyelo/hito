@@ -12,14 +12,11 @@ const validateAlbumData = (data) => {
     if (!isValid(date)) {
         throw new HttpError(400, "Invalid date format");
     }
-
-    // Convertir la fecha a un formato amigable para la base de datos
-    data.release_date = format(date, 'yyyy-MM-dd');
 };
 
-const formatDate = (isoDate) => {
+const formatDate = (rel_date) => {
     // Asegurarse de que isoDate sea una cadena de texto
-    const dateStr = isoDate.toString();
+    const dateStr = rel_date.toString();
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) {
         throw new Error("Invalid date");
