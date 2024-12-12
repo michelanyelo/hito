@@ -15,7 +15,7 @@ const validateAlbumData = (data) => {
 };
 
 const formatDate = (rel_date) => {
-    // Asegurarse de que isoDate sea una cadena de texto
+    // Asegurarse de que release_date sea una cadena de texto
     const dateStr = rel_date.toString();
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) {
@@ -43,8 +43,6 @@ const createAlbum = async (req, res, next) => {
         next(error); // Delegar error al middleware
     }
 };
-
-
 
 const getAllAlbums = async (req, res, next) => {
     try {
